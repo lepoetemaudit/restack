@@ -1,5 +1,5 @@
 from unittest import TestCase
-from connection import Restack, RestackError
+from .connection import Restack, RestackError
 
 TOKEN = "_a_mock_token_"
 
