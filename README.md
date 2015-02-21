@@ -8,8 +8,7 @@ A python API for working with Restack, the smart API for IoT
 
 ## Usage
 
-```
-#!python
+```python
 from restack import Restack, Device
 
 AUTH_TOKEN = "ae0739cbd09309abec093410aebff70934"
