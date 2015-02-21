@@ -1,0 +1,2 @@
+class RestackError(BaseException):
+    pass
