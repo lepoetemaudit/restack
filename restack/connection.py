@@ -1,6 +1,7 @@
+import datetime
 import json
 import requests
-from restack.entities import Device
+from restack.entities import Device, Stack
 from restack.exceptions import RestackError
 
 BASE_URL = "https://api.restack.io/"
@@ -29,6 +30,9 @@ class Restack(object):
 
     def _build_device_list(self, resp):
         return [Device(conn=self, response_data=d) for d in resp.json()]
+
+    def _build_stack_list(self, device, resp):
+        return [Stack(device=device, response_data=d) for d in resp.json()]
 
     def make_request(self, endpoint, method="GET", auth=False, body=None):
         headers = {}
@@ -69,7 +73,8 @@ class Restack(object):
             raise RestackError("Couldn't save device. Message: %s; Errors: %s"
                                % (data.get('message'), data.get('errors', None)))
 
-        return Device(conn=self, response_data=resp.json())
+
+        device._load_from_response_data(resp.json())
 
     def get_device(self, device_id):
         resp = self.make_request(endpoint="device/%s" % device_id, auth=True)
@@ -106,3 +111,35 @@ class Restack(object):
 
         return self._build_device_list(
             self.make_request(self.ENDPOINT_PUBLIC_DEVICES))
+
+    @requires_auth
+    def update_stack(self, stack):
+        endpoint = "device/%s/stack/%s" % (stack.device.id, stack.name)
+        method = "PUT"
+
+        body = dict((k, getattr(stack, k, None)) for k in ('unit', 'symbol', 'type'))
+
+        resp = self.make_request(endpoint=endpoint,
+                                 method=method, auth=True, body=json.dumps(body))
+
+        return resp.status_code == 204
+
+    @requires_auth
+    def get_stacks(self, device):
+        endpoint = "device/%s/stacks" % device.id
+        return self._build_stack_list(device, self.make_request(endpoint, auth=True))
+
+    @requires_auth
+    def save_stack_data(self, stack, value, timestamp=None):
+        body = {'value': value}
+
+        if not timestamp:
+            timestamp = datetime.datetime.utcnow() - datetime.timedelta(hours=10)
+        body['timestamp'] = timestamp.isoformat() + "Z"
+
+        endpoint = "device/%s/stack/%s/value" % (stack.device.id, stack.name)
+
+        resp = self.make_request(endpoint=endpoint,
+                             method="POST", auth=True, body=json.dumps(body))
+
+        return resp.status_code in (201, 202)

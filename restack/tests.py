@@ -3,7 +3,7 @@ from unittest import TestCase
 import responses
 from .connection import Restack, BASE_URL
 from restack import RestackError
-from restack.entities import Device
+from restack.entities import Device, Stack
 from .mocks import MOCK_TOKEN, add_mock_api
 
 
@@ -33,7 +33,7 @@ class TestErrors(TestCase):
         restack.get_devices()
 
 
-class TestDeviceListing(TestCase):
+class TestDevices(TestCase):
 
     def setUp(self):
         add_mock_api()
@@ -70,3 +70,41 @@ class TestDeviceListing(TestCase):
         device = device_list[0]
         device.name = "New name"
         self.assertTrue(device.save())
+
+    @responses.activate
+    def test_creating_device(self):
+        restack = Restack(MOCK_TOKEN)
+        device = Device(conn=restack)
+        device.name = "My device"
+        device.save()
+        self.assertTrue(device.id)
+
+class TestStacks(TestCase):
+
+    def setUp(self):
+        add_mock_api()
+
+    def test_stack_name(self):
+        stack = Stack(device=None)
+        try:
+            stack.name = "obviously bad name"
+            self.assertFalse(True)
+        except RestackError:
+            pass
+
+        stack.name = "good_name_now_1"
+
+    @responses.activate
+    def test_create_stack(self):
+        restack = Restack(MOCK_TOKEN)
+        device_list = restack.get_devices()
+        device = device_list[0]
+        stack = device.create_stack("Thermometer", "Degrees Celcius", "C", Stack.NUMERIC)
+
+    @responses.activate
+    def test_list_stacks(self):
+        restack = Restack(MOCK_TOKEN)
+        device_list = restack.get_devices()
+        device = device_list[0]
+        stacks = device.get_stacks()
+        self.assertTrue(all(isinstance(s, Stack) for s in stacks) and len(stacks))
