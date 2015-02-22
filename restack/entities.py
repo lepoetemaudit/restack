@@ -88,7 +88,7 @@ class Stack(object):
 
     @name.setter
     def name(self, value):
-        match = re.fullmatch(r"[a-zA-Z0-9-_]*", value)
+        match = re.match(r"[a-zA-Z0-9-_]*$", value)
         if not match:
             raise RestackError("Stack names must only contain numbers, letters, dashes or underscores")
 
