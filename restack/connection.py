@@ -131,7 +131,7 @@ class Restack(object):
 
     @requires_auth
     def save_stack_data(self, stack, value, timestamp=None):
-        body = {'value': value}
+        body = {'value': str(value)}
 
         if not timestamp:
             timestamp = datetime.datetime.utcnow() - datetime.timedelta(hours=10)
