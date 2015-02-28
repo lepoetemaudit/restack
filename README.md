@@ -1,10 +1,10 @@
 # restack
 
-[![Build Status](https://travis-ci.org/lepoetemaudit/restack.svg?branch=master)](https://travis-ci.org/lepoetemaudit/restack)
+[![Build Status](https://travis-ci.org/lepoetemaudit/restack.svg?branch=master)](https://travis-ci.org/lepoetemaudit/restack) [![Coverage Status](https://coveralls.io/repos/lepoetemaudit/restack/badge.svg?branch=master)](https://coveralls.io/r/lepoetemaudit/restack?branch=master)
 
 A python API for working with Restack, the smart API for IoT
 
-*N.B. This is an early WIP bit is still somewhat useful*
+*N.B. This is an early WIP but is still somewhat useful*
 
 ## Usage
 
