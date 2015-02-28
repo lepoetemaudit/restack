@@ -11,7 +11,7 @@ install:
   - "pip install coveralls"
 # command to run tests
 script:
-  coverage run --source=restack nosetests
+  nosetests  --with-coverage --cover-package=restack
 
 after_success:
   coveralls
