@@ -1,3 +1,6 @@
+# restack.io closed, this is for posterity only
+-------------------------------------------------------
+
 # restack
 
 [![Build Status](https://travis-ci.org/lepoetemaudit/restack.svg?branch=master)](https://travis-ci.org/lepoetemaudit/restack) [![Coverage Status](https://coveralls.io/repos/lepoetemaudit/restack/badge.svg?branch=master)](https://coveralls.io/r/lepoetemaudit/restack?branch=master)
